@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>August 1945 — The Decision Room</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          whs: { dark: '#002066', gold: '#c5a059', light: '#d1e6f6', goldtext: '#8b6508' }
+        }
+      }
+    }
+  }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
+  :root { box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  body { font-family: 'Manrope', sans-serif; background: #f1f5f9; color: #1e293b; margin: 0; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .archival-photo { filter: sepia(22%) saturate(85%) contrast(1.03); border-color: #c5a059 !important; }
+
+  .screen { display: none; }
+  .screen.active { display: block; animation: fadein 0.35s ease; }
+  @keyframes fadein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .choice-btn { text-align: left; transition: all 0.15s; }
+  .choice-btn:hover, .choice-btn:focus-visible { border-color: #c5a059; background-color: #fefce8; transform: translateY(-1px); }
+
+  .progress-dot { height: 5px; flex: 1; background: #e2e8f0; border-radius: 3px; transition: background 0.3s; }
+  .progress-dot.done { background: #c5a059; }
+
+  :focus-visible { outline: 3px solid #c5a059; outline-offset: 2px; border-radius: 2px; }
+
+  .speaker-btn { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; border-radius: 9999px; border: 1.5px solid #c5a059; background: #fff; color: #8b6508; flex-shrink: 0; cursor: pointer; transition: all 0.15s; }
+  .speaker-btn:hover { background: #fefce8; }
+  .speaker-btn.speaking { background: #c5a059; color: #fff; animation: pulse-speak 1.2s ease-in-out infinite; }
+  .speaker-btn svg { width: 1rem; height: 1rem; }
+  .speaker-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  @keyframes pulse-speak { 0%, 100% { box-shadow: 0 0 0 0 rgba(197,160,89,0.5); } 50% { box-shadow: 0 0 0 5px rgba(197,160,89,0); } }
+  .on-dark .speaker-btn { background: rgba(255,255,255,0.1); border-color: #c5a059; color: #c5a059; }
+  .on-dark .speaker-btn:hover { background: rgba(255,255,255,0.2); }
+  .on-dark .speaker-btn.speaking { background: #c5a059; color: #002066; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+
+  @media print {
+    body * { visibility: hidden; }
+    #screen-summary, #screen-summary * { visibility: visible; }
+    #screen-summary { display: block !important; position: absolute; left: 0; top: 0; width: 100%; }
+    #screen-summary button, footer { display: none !important; }
+    #screen-summary .bg-whs-dark { background: white !important; color: black !important; border: 2px solid #002066; }
+    #screen-summary .bg-whs-dark .text-blue-200 { color: #334155 !important; }
+  }
+</style>
+</head>
+<body>
+<div id="app" class="max-w-3xl mx-auto p-4 md:p-8">
+
+  <header class="bg-whs-dark rounded-xl p-6 md:p-8 text-white mb-8 shadow-lg text-center relative overflow-hidden">
+    <div class="mono text-[10px] md:text-xs uppercase tracking-widest text-blue-200 mb-2">Waiheke High School History — AS92027</div>
+    <h1 class="text-3xl md:text-4xl font-black mb-1">The Decision Room</h1>
+    <p class="text-blue-200 text-sm md:text-base">August 1945 — you are in the room</p>
+  </header>
+
+  <!-- SCREEN: INTRO -->
+  <section id="screen-intro" class="screen active">
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-8 mb-6">
+      <div class="flex items-start gap-3">
+        <div class="flex-1" id="intro-text">
+          <p class="text-slate-800 leading-relaxed mb-4">It is the final weeks of the Second World War in the Pacific. You are about to step into the position of one of three people who, across a few weeks in 1945, made decisions that ended it.</p>
+          <p class="text-slate-800 leading-relaxed">At each point, you'll be given the real situation as it stood, informed by what this person valued, believed, and had lived through — then asked to decide. Afterwards you'll find out what actually happened, and how close your call came to history. Play as all three to build a full summary you can print.</p>
+        </div>
+        <button class="speaker-btn" data-speak="intro-text" onclick="speakElement(this)" aria-label="Read this introduction aloud" title="Read aloud"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H2v6h4l5 4V5z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15.5 8.5a5 5 0 010 7M18 6a9 9 0 010 12"/></svg></button>
+      </div>
+    </div>
+    <div class="bg-whs-gold/10 border-l-4 border-whs-gold rounded-r-lg p-4 mb-8 text-sm text-slate-800">Some choices lead to the path history actually took. Others lead to a <strong>hypothetical</strong> — a historian-informed guess at what might have followed, clearly marked as speculation. This explores perspective and decision-making; it is not a definitive record of "what would have happened."</div>
+
+    <div class="grid md:grid-cols-3 gap-5">
+      <button class="choice-btn bg-white rounded-xl border-2 border-slate-200 p-6 shadow-sm" onclick="startGame('truman')">
+        <img src="https://cdn2.picryl.com/photo/2021/03/25/harry-truman-at-desk-9f1477-1024.png" alt="Portrait of President Harry S. Truman" class="archival-photo w-16 h-16 rounded-full object-cover mb-3 border-2 border-whs-dark/20 shadow-md">
+        <div class="mono text-[11px] uppercase tracking-widest text-whs-dark font-bold mb-1">United States — Washington, D.C.</div>
+        <h3 class="text-xl font-black text-slate-900 mb-2">Play as Truman</h3>
+        <p class="text-slate-700 text-sm leading-relaxed">You are President of the United States. Germany has fallen. Japan fights on. You hold a weapon no leader has ever used before.</p>
+      </button>
+      <button class="choice-btn bg-white rounded-xl border-2 border-slate-200 p-6 shadow-sm" onclick="startGame('macarthur')">
+        <img src="https://cdn4.picryl.com/photo/2019/09/22/gen-douglas-macarthur-c50a4d-1024.jpg" alt="Portrait of General Douglas MacArthur" class="archival-photo w-16 h-16 rounded-full object-cover mb-3 border-2 border-whs-dark/20 shadow-md">
+        <div class="mono text-[11px] uppercase tracking-widest text-whs-dark font-bold mb-1">United States — Pacific Command</div>
+        <h3 class="text-xl font-black text-slate-900 mb-2">Play as MacArthur</h3>
+        <p class="text-slate-700 text-sm leading-relaxed">You command US forces in the Pacific. You're preparing an invasion, quietly doubting a weapon you weren't consulted on — and about to govern whatever is left.</p>
+      </button>
+      <button class="choice-btn bg-white rounded-xl border-2 border-slate-200 p-6 shadow-sm" onclick="startGame('japan')">
+        <img src="https://cdn2.picryl.com/photo/1935/12/31/emperor-showa-in-dress-510665-1024.jpg" alt="Portrait of Emperor Hirohito" class="archival-photo w-16 h-16 rounded-full object-contain bg-slate-100 mb-3 border-2 border-[#8b0000]/20 shadow-md">
+        <div class="mono text-[11px] uppercase tracking-widest text-[#8b0000] font-bold mb-1">Japan — Imperial Palace, Tokyo</div>
+        <h3 class="text-xl font-black text-slate-900 mb-2">Play as Hirohito</h3>
+        <p class="text-slate-700 text-sm leading-relaxed">You are Emperor of Japan. Your nation is being destroyed. Your council cannot agree on how — or whether — to stop it.</p>
+      </button>
+    </div>
+  </section>
+
+  <!-- SCREEN: PERSPECTIVE INTRO -->
+  <section id="screen-perspective" class="screen">
+    <div class="bg-white rounded-xl shadow-sm border-t-4 overflow-hidden mb-6" id="persp-card">
+      <div class="p-6 md:p-8 text-center" id="persp-header"></div>
+      <div class="p-6 md:p-8 pt-0 space-y-4" id="persp-body"></div>
+    </div>
+    <div class="text-center">
+      <button class="mono text-sm font-bold px-8 py-3 rounded-lg bg-whs-gold text-white shadow-md hover:brightness-110 transition" onclick="beginDecisions()">Begin →</button>
+    </div>
+  </section>
+
+  <!-- SCREEN: DECISION -->
+  <section id="screen-decision" class="screen">
+    <div class="flex gap-1.5 mb-6" id="progress-track"></div>
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-8 mb-5">
+      <div class="flex justify-between items-center mono text-[11px] uppercase tracking-widest mb-4 pb-3 border-b border-slate-100" id="decision-headerline"></div>
+      <div class="flex items-start gap-3 mb-4">
+        <p class="text-slate-800 leading-relaxed flex-1" id="decision-context"></p>
+        <button class="speaker-btn" data-speak="decision-context" onclick="speakElement(this)" aria-label="Read this situation aloud" title="Read aloud"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H2v6h4l5 4V5z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15.5 8.5a5 5 0 010 7M18 6a9 9 0 010 12"/></svg></button>
+      </div>
+      <div id="decision-stage2" class="hidden">
+        <div class="flex items-start gap-3">
+          <p class="font-bold text-whs-goldtext italic flex-1" id="decision-question"></p>
+          <button class="speaker-btn" data-speak="decision-question" onclick="speakElement(this)" aria-label="Read this question aloud" title="Read aloud"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H2v6h4l5 4V5z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15.5 8.5a5 5 0 010 7M18 6a9 9 0 010 12"/></svg></button>
+        </div>
+      </div>
+    </div>
+    <div class="flex justify-center gap-3 mb-5" id="decision-reveal-wrap">
+      <button class="hidden mono text-sm font-bold px-5 py-3 rounded-lg bg-slate-200 text-slate-700 hover:bg-slate-300 transition" id="decision-back-btn" onclick="reverseDecisionStage()">← Back</button>
+      <button class="mono text-sm font-bold px-6 py-3 rounded-lg bg-whs-gold text-white shadow-md hover:brightness-110 transition" id="decision-reveal-btn" onclick="advanceDecisionStage()"></button>
+    </div>
+    <div class="space-y-3 hidden" id="decision-choices"></div>
+  </section>
+
+  <!-- SCREEN: OUTCOME -->
+  <section id="screen-outcome" class="screen">
+    <div class="flex gap-1.5 mb-6" id="progress-track-outcome"></div>
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-8">
+      <span class="mono inline-block text-[10px] uppercase tracking-widest px-3 py-1 rounded-full mb-4" id="outcome-tag"></span>
+      <div class="flex items-start gap-3 mb-4">
+        <p class="text-slate-800 leading-relaxed flex-1" id="outcome-text"></p>
+        <button class="speaker-btn" data-speak="outcome-text" onclick="speakElement(this)" aria-label="Read this outcome aloud" title="Read aloud"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H2v6h4l5 4V5z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15.5 8.5a5 5 0 010 7M18 6a9 9 0 010 12"/></svg></button>
+      </div>
+
+      <div class="hidden bg-emerald-50 border-2 border-emerald-200 rounded-lg p-4 mb-6" id="really-happened-box">
+        <div class="mono text-[10px] uppercase tracking-widest text-emerald-800 font-bold mb-2 flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+          What Really Happened
+        </div>
+        <div class="flex items-start gap-3">
+          <p class="text-emerald-900 text-sm leading-relaxed flex-1 font-medium" id="really-happened-text"></p>
+          <button class="speaker-btn" data-speak="really-happened-text" onclick="speakElement(this)" aria-label="Read what really happened aloud" title="Read aloud"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H2v6h4l5 4V5z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15.5 8.5a5 5 0 010 7M18 6a9 9 0 010 12"/></svg></button>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-3">
+        <button class="mono text-sm font-bold px-5 py-3 rounded-lg bg-slate-200 text-slate-700 hover:bg-slate-300 transition" onclick="backToChangeAnswer()">← Change My Answer</button>
+        <button class="mono text-sm font-bold px-6 py-3 rounded-lg bg-whs-gold text-white shadow-md hover:brightness-110 transition" id="continue-btn" onclick="continueAfterOutcome()">Continue →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCREEN: CHECKPOINT -->
+  <section id="screen-checkpoint" class="screen">
+    <div class="bg-whs-dark rounded-xl p-6 md:p-8 text-white shadow-lg on-dark">
+      <div class="mono text-[11px] uppercase tracking-widest text-whs-gold mb-3">Perspective Checkpoint</div>
+      <div class="flex items-start gap-3">
+        <p class="leading-relaxed text-blue-50 flex-1" id="checkpoint-text"></p>
+        <button class="speaker-btn" data-speak="checkpoint-text" onclick="speakElement(this)" aria-label="Read this checkpoint aloud" title="Read aloud"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H2v6h4l5 4V5z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15.5 8.5a5 5 0 010 7M18 6a9 9 0 010 12"/></svg></button>
+      </div>
+      <button class="mono text-sm font-bold px-6 py-3 rounded-lg bg-white text-whs-dark shadow-md mt-6 hover:brightness-95 transition" onclick="continueAfterCheckpoint()">Continue →</button>
+    </div>
+  </section>
+
+  <!-- SCREEN: EPILOGUE -->
+  <section id="screen-epilogue" class="screen">
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-8 mb-6">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
+        <h2 class="mono text-xs uppercase tracking-widest text-whs-goldtext">What Actually Happened</h2>
+        <button class="speaker-btn" data-speak="what-happened-text" onclick="speakElement(this)" aria-label="Read this section aloud" title="Read aloud"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H2v6h4l5 4V5z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15.5 8.5a5 5 0 010 7M18 6a9 9 0 010 12"/></svg></button>
+      </div>
+      <div id="what-happened-text">
+        <p class="text-slate-800 leading-relaxed mb-4">On 6 August, the atomic bomb "Little Boy" destroyed Hiroshima; an estimated 70,000–135,000 people died. On 9 August, "Fat Man" destroyed Nagasaki, killing an estimated 39,000–80,000 — the vast majority civilians. These remain among the deadliest single events in human history.</p>
+        <p class="text-slate-800 leading-relaxed">On 15 August 1945, Emperor Hirohito's recorded address — the <em>Gyokuon-hōsō</em> — was broadcast to the Japanese people, the first time most had heard his voice. He described "enduring the unendurable and suffering what is insufferable." On 2 September, Japan's formal surrender was signed aboard the USS Missouri in Tokyo Bay, ending the Second World War.</p>
+      </div>
+    </div>
+
+    <figure class="mb-6">
+      <img src="https://cdn2.picryl.com/photo/1945/09/02/surrender-of-japan-uss-missouri-9ff472-1024.jpg" alt="Japanese delegates aboard USS Missouri during the surrender ceremony, Tokyo Bay, 2 September 1945" class="archival-photo w-full rounded-xl shadow-md border border-slate-200 object-cover max-h-72">
+      <figcaption class="text-xs text-slate-600 mt-2 text-center">Japanese representatives aboard USS Missouri during the surrender ceremony, 2 September 1945. Public domain (US Army Signal Corps, via Wikimedia Commons).</figcaption>
+    </figure>
+
+    <figure class="mb-6">
+      <img src="https://cdn2.picryl.com/photo/1945/09/27/macarthur-hirohito2-03d8e8-1024.jpg" alt="General Douglas MacArthur standing beside Emperor Hirohito at their first meeting, Tokyo, 27 September 1945" class="archival-photo w-full rounded-xl shadow-md border border-slate-200 object-contain max-h-80 bg-slate-100">
+      <figcaption class="text-xs text-slate-600 mt-2 text-center">What came after: Hirohito and General MacArthur at their first meeting, Tokyo, 27 September 1945. Public domain (US Army Signal Corps, via Wikimedia Commons).</figcaption>
+    </figure>
+
+    <div class="mono text-xs bg-slate-100 border border-slate-200 rounded-lg p-4 mb-6 text-slate-700 leading-relaxed" id="match-summary"></div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-8 mb-6">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
+        <h2 class="mono text-xs uppercase tracking-widest text-whs-goldtext">Now, Think About the Other Side</h2>
+        <button class="speaker-btn" data-speak="epilogue-crossover" onclick="speakElement(this)" aria-label="Read this section aloud" title="Read aloud"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H2v6h4l5 4V5z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15.5 8.5a5 5 0 010 7M18 6a9 9 0 010 12"/></svg></button>
+      </div>
+      <p class="text-slate-800 leading-relaxed" id="epilogue-crossover"></p>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-8 mb-6">
+      <h2 class="mono text-xs uppercase tracking-widest text-whs-goldtext border-b border-slate-100 pb-3 mb-4">Reflection</h2>
+      <ul class="space-y-3" id="reflection-list"></ul>
+    </div>
+
+    <div class="flex flex-wrap gap-3" id="epilogue-actions"></div>
+  </section>
+
+  <!-- SCREEN: FULL SUMMARY -->
+  <section id="screen-summary" class="screen">
+    <div class="bg-whs-dark rounded-xl p-6 md:p-8 text-white mb-6 shadow-lg text-center">
+      <div class="mono text-[10px] uppercase tracking-widest text-blue-200 mb-2">All Three Perspectives Played</div>
+      <h2 class="text-2xl md:text-3xl font-black">Your Full Summary</h2>
+      <p class="text-blue-200 text-sm mt-2">The real historical record — what each person actually decided, regardless of which paths you explored while playing.</p>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border-t-4 border-t-whs-dark p-6 md:p-8 mb-6">
+      <h3 class="mono text-xs uppercase tracking-widest text-whs-dark font-bold border-b border-slate-100 pb-3 mb-4">🇺🇸 US Administration <span class="text-slate-600 font-normal normal-case">(Truman &amp; MacArthur)</span></h3>
+      <ul class="space-y-3" id="summary-us-list"></ul>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border-t-4 border-t-[#8b0000] p-6 md:p-8 mb-6">
+      <h3 class="mono text-xs uppercase tracking-widest text-[#8b0000] font-bold border-b border-slate-100 pb-3 mb-4">🇯🇵 Japanese Leadership <span class="text-slate-600 font-normal normal-case">(Hirohito)</span></h3>
+      <ul class="space-y-3" id="summary-japan-list"></ul>
+    </div>
+
+    <div class="flex flex-wrap gap-3">
+      <button class="mono text-sm font-bold px-6 py-3 rounded-lg bg-whs-gold text-white shadow-md hover:brightness-110 transition" onclick="printSummary()">🖨 Print This Summary</button>
+      <button class="mono text-sm font-bold px-6 py-3 rounded-lg bg-slate-200 text-slate-700 hover:bg-slate-300 transition" onclick="showScreen('screen-intro')">Back to Start</button>
+      <button class="mono text-sm font-bold px-6 py-3 rounded-lg bg-slate-200 text-slate-700 hover:bg-slate-300 transition" onclick="resetEverything()">Reset All Progress</button>
+    </div>
+  </section>
+
+  <footer class="mt-10 pt-6 border-t border-slate-300 text-center mono text-[10px] uppercase tracking-wider text-slate-600 leading-loose">
+    A decision simulation for AS92027 · Historical events and dates are factual · Hypothetical outcomes are clearly marked and are educated speculation, not recorded history
+  </footer>
+
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const PERSPECTIVES = {
+  truman: {
+    accent: 'border-t-whs-dark',
+    img: 'https://cdn2.picryl.com/photo/2021/03/25/harry-truman-at-desk-9f1477-1024.png',
+    imgAlt: 'Portrait of President Harry S. Truman',
+    name: 'President Harry S. Truman',
+    flagLabel: '🇺🇸 US Administration',
+    headerColor: 'text-whs-dark',
+    items: [
+      ['Values & Beliefs', 'Democracy, security, and the "Four Freedoms." You believe authoritarian militarism must be permanently eliminated, not just defeated on the battlefield.'],
+      ['Experience', "You've watched WWII's staggering human cost first-hand — including the ferocity of Japanese resistance at Okinawa: kamikaze attacks, mass civilian deaths."],
+      ['Position', 'President of the United States — the only person who can authorise the use of the atomic bomb.'],
+      ['Wider Circumstances', "Germany has fallen. The Soviet Union's relationship with the West is cooling. A working atomic bomb exists for the first time in history."]
+    ]
+  },
+  macarthur: {
+    accent: 'border-t-whs-dark',
+    img: 'https://cdn4.picryl.com/photo/2019/09/22/gen-douglas-macarthur-c50a4d-1024.jpg',
+    imgAlt: 'Portrait of General Douglas MacArthur',
+    name: 'General Douglas MacArthur',
+    flagLabel: '🇺🇸 US Administration',
+    headerColor: 'text-whs-dark',
+    items: [
+      ['Values & Beliefs', 'Order, stability, and decisive command. You believe occupied peoples respond best to firm but fair leadership — and that symbolism and public perception matter as much as policy.'],
+      ['Experience', 'You commanded Allied forces across the gruelling island campaigns of the Pacific, and famously vowed "I shall return" after being forced to retreat from the Philippines in 1942.'],
+      ['Position', 'Commander of US Army Forces in the Pacific, preparing to lead any invasion of Japan — and soon to be appointed Supreme Commander for the Allied Powers, governing occupied Japan.'],
+      ['Wider Circumstances', 'You are not part of the small circle deciding whether to use the atomic bomb — that choice is being made in Washington, without you. Your job is to prepare for whatever comes next, then govern what remains.']
+    ]
+  },
+  japan: {
+    accent: 'border-t-[#8b0000]',
+    img: 'https://cdn2.picryl.com/photo/1935/12/31/emperor-showa-in-dress-510665-1024.jpg',
+    imgAlt: 'Portrait of Emperor Hirohito',
+    name: 'Emperor Hirohito',
+    flagLabel: '🇯🇵 Japanese Leadership',
+    headerColor: 'text-[#8b0000]',
+    items: [
+      ['Values & Beliefs', 'Kokutai — the preservation of the Imperial system and your own symbolic status — matters more to you than continuing to fight.'],
+      ['Experience', 'Generations of Meiji-era tradition in which Emperors stayed symbolically central but politically silent. You have watched firebombing and famine devastate Japanese cities.'],
+      ['Position', 'Emperor of Japan — revered, but with limited formal political power in practice.'],
+      ['Wider Circumstances', 'Atomic weapons of unprecedented power now exist. The Soviet Union is entering the war. Your government cannot agree on what to do.']
+    ]
+  }
+};
+
+const PATHS = {
+  truman: {
+    flagLabel: "🇺🇸 US ADMINISTRATION — TRUMAN",
+    headerColor: "text-whs-dark",
+    checkpointAfter: 2,
+    checkpointText: "Notice how each of your choices traces back to the same core belief: that Japanese militarism had to be permanently broken, whatever the cost of achieving it. Your motivation — ending the war fast and preventing an invasion that could cost a million American lives — has driven every action so far, from the Potsdam ultimatum to the bombs themselves.",
+    nodes: [
+      {
+        date: "26 JULY 1945",
+        context: "Germany has surrendered. Japan fights on. Three weeks ago, the first successful atomic bomb test took place in New Mexico. Military planners project over 1 million Allied casualties if a full invasion of Japan (Operation Downfall) goes ahead. Your advisors are divided on what to do next.",
+        question: "How do you respond to Japan's continued resistance?",
+        choices: [
+          { letter: "A", text: "Say nothing publicly. Continue the conventional bombing campaign and naval blockade, and wait Japan out.", historical: false,
+            outcome: "Without a formal ultimatum, Japan's government has no clear proposal to respond to. The blockade and firebombing continue to devastate Japanese cities, but there is no diplomatic off-ramp on the table. Historians generally think this would have prolonged the crisis without changing the eventual outcome much.",
+            reallyHappened: "Truman issued the Potsdam Declaration on 26 July — he did not simply continue quietly with blockade and bombing." },
+          { letter: "B", text: "Issue the Potsdam Declaration — a public ultimatum demanding unconditional surrender, warning of \u201cprompt and utter destruction.\u201d", historical: true,
+            outcome: "You issue the Potsdam Declaration on 26 July, jointly with Britain and China. It threatens \u201cprompt and utter destruction\u201d but does not mention the atomic bomb directly \u2014 you want to preserve the element of surprise, and some advisors still hope the threat alone might be enough." },
+          { letter: "C", text: "Offer Japan conditional terms immediately, guaranteeing the Emperor keeps his throne if they surrender now.", historical: false,
+            outcome: "Guaranteeing the Emperor's position immediately removes your key point of leverage. Secretary Stimson genuinely argued for something like this \u2014 but hardliners in Japan's military may not have accepted it anyway, and conceding this early raises hard questions at home. This was seriously debated in the real administration, but ultimately rejected in favour of ambiguity.",
+            reallyHappened: "Truman issued the ambiguous Potsdam Declaration instead — he did not guarantee the Emperor's position upfront." }
+        ]
+      },
+      {
+        date: "LATE JULY 1945",
+        context: "Your Interim Committee has been debating how the bomb should be used, if it comes to that. Some scientists (in the Franck Report) have urged a demonstration on an uninhabited area to show Japan the weapon's power without killing civilians directly. Military advisors argue a demonstration risks looking weak if it fails publicly, and that only a real strike will shock Japan into surrender.",
+        question: "How should the bomb be used, if authorised?",
+        choices: [
+          { letter: "A", text: "Order a demonstration strike on an uninhabited island or ocean area first, giving Japan the chance to witness the bomb's power before it's ever used on a city.", historical: false,
+            outcome: "You side with the Franck Report's authors. This is not what happened \u2014 in reality this option was seriously discussed and rejected, partly because there was no certainty the bomb would work as demonstrated, and partly because your advisors doubted a demonstration alone would break Japan's resolve.",
+            reallyHappened: "The bomb was used directly on Hiroshima on 6 August — no demonstration strike was ever carried out." },
+          { letter: "B", text: "Delay any bombing decision until Japan has been formally warned, by name, that a specific city will be targeted.", historical: false,
+            outcome: "You choose to name the target in advance. This is not what happened \u2014 the actual Potsdam Declaration warned of \u201cprompt and utter destruction\u201d in general terms, but never named Hiroshima, any other city, or the atomic bomb itself.",
+            reallyHappened: "Japan was never told which city would be targeted — the Potsdam Declaration's warning was deliberately general." },
+          { letter: "C", text: "Strike a Japanese city directly, without warning, to maximise shock and force immediate surrender.", historical: true,
+            outcome: "You approve the Interim Committee's recommendation (which included Stimson and senior scientific advisors): the bomb will be used on a military and industrial target within a city, without advance warning. Hiroshima \u2014 home to a major army base and industry \u2014 is selected." }
+        ]
+      },
+      {
+        date: "6\u20138 AUGUST 1945",
+        context: "Japan does not formally respond to Potsdam \u2014 Prime Minister Suzuki's ambiguous comment (\u201cmokusatsu\u201d) is read by the Allies as rejection. On 6 August, the bomb is dropped on Hiroshima; an estimated 70,000\u2013135,000 people are killed. Two days later, the Soviet Union declares war on Japan and invades Manchuria.",
+        question: "Japan still has not surrendered. What do you do next?",
+        choices: [
+          { letter: "A", text: "Authorise a second bomb, on Nagasaki, to show you're prepared to keep using this weapon until Japan surrenders.", historical: true,
+            outcome: "You authorise the second bombing. On 9 August, \u201cFat Man\u201d is dropped on Nagasaki, killing an estimated 39,000\u201380,000 people. The gap between the two bombs is just three days \u2014 barely enough time for Japan's government to process what happened at Hiroshima before Nagasaki is hit too." },
+          { letter: "B", text: "Hold off. Give Japan more time to absorb Hiroshima and the Soviet invasion before deciding on a second bomb.", historical: false,
+            outcome: "You wait. Exactly how much time Japan's government needed is something historians still debate \u2014 but every extra day is also a day the war continues elsewhere, and your military advisors are wary of appearing to hesitate. In this version, Nagasaki is bombed only a little later than it actually was.",
+            reallyHappened: "Truman authorised the Nagasaki bombing just three days after Hiroshima, on 9 August — there was no significant delay." },
+          { letter: "C", text: "Shift to conventional bombing and blockade only \u2014 rule out further atomic bombs.", historical: false,
+            outcome: "You rule out further atomic bombs. This is not what happened \u2014 in reality, planning was already underway for a third bomb if Japan did not surrender soon after Nagasaki. Choosing restraint here is a real break from history.",
+            reallyHappened: "A third bomb was kept in active preparation — atomic bombing was not ruled out after Nagasaki." }
+        ]
+      },
+      {
+        date: "10\u201311 AUGUST 1945",
+        context: "Japan's government signals it is willing to surrender \u2014 on one condition: that the Emperor's position is preserved. Your Cabinet is split. Secretary Stimson wants to grant this outright. Others want to reject it and demand truly unconditional surrender.",
+        question: "How do you respond to Japan's condition?",
+        choices: [
+          { letter: "A", text: "Reject the condition outright. Demand truly unconditional surrender, no exceptions.", historical: false,
+            outcome: "You reject the condition. Without any ambiguity to work with, Japan's peace faction has a much harder argument to make to their own military hardliners \u2014 in real history, that ambiguity was exactly what made a face-saving surrender possible.",
+            reallyHappened: "Truman approved the ambiguous Byrnes Note rather than rejecting Japan's condition outright." },
+          { letter: "B", text: "Explicitly guarantee the Emperor will keep his throne, to secure surrender as fast as possible.", historical: false,
+            outcome: "You guarantee the Emperor's position explicitly. This goes further than the real Byrnes Note \u2014 it might reassure Japan's peace faction fastest, but it removes any remaining leverage over the terms of the occupation to come.",
+            reallyHappened: "The Byrnes Note stayed deliberately vague — Truman never explicitly guaranteed the Emperor's position." },
+          { letter: "C", text: "Send a deliberately ambiguous response (the Byrnes Note) \u2014 the Emperor's authority will be \u201csubject to\u201d the Allied Supreme Commander, without explicitly guaranteeing or rejecting his position.", historical: true,
+            outcome: "You approve Secretary Byrnes's wording. It commits to nothing explicitly, but leaves Japan's leadership just enough room to interpret it favourably \u2014 and to argue to their own hardliners that the Emperor's position is not being destroyed outright." }
+        ]
+      },
+      {
+        date: "12\u201314 AUGUST 1945",
+        context: "Despite two atomic bombs and the Soviet invasion, Japan has still not formally surrendered. Some of your military advisors argue for preparing a third bomb, potentially ready within days, as further leverage in case Japan continues to resist.",
+        question: "Do you authorise preparing a third bomb?",
+        choices: [
+          { letter: "A", text: "Hold off on further bomb preparation, relying on diplomatic pressure and the Soviet invasion alone to force surrender.", historical: false,
+            outcome: "You choose to wait. This isn't what happened \u2014 though it's worth noting Japan surrendered just days later anyway, so whether a third bomb was truly necessary as leverage is something historians still debate.",
+            reallyHappened: "A third bomb was genuinely kept in production and could have been ready within days." },
+          { letter: "B", text: "Authorise continued production of a third bomb, to be ready as leverage if Japan doesn't surrender soon.", historical: true,
+            outcome: "You authorise continued production. In reality, a third bomb was genuinely in preparation and could have been ready within days \u2014 though Japan's surrender on 15 August meant it was never used." }
+        ]
+      }
+    ]
+  },
+  macarthur: {
+    flagLabel: "🇺🇸 US ADMINISTRATION — MACARTHUR",
+    headerColor: "text-whs-dark",
+    checkpointAfter: 2,
+    checkpointText: "Notice how each of your choices traces back to the same instinct: that how power is used matters as much as having it. Whether preparing for invasion, accepting a surrender, or governing a defeated nation, your motivation has been to project calm, deliberate control \u2014 because you believe that's what lasting stability requires.",
+    nodes: [
+      {
+        date: "LATE JULY 1945",
+        context: "Operation Downfall preparations continue. Privately, you doubt the atomic bomb is even necessary \u2014 you believe Japan's navy and air force are already crippled, and that conventional blockade and bombing might force surrender without it. This isn't your decision to make.",
+        question: "How do you handle your private doubts about the bomb?",
+        choices: [
+          { letter: "A", text: "Formally lodge a strong objection with Washington, urging them to rely on conventional forces instead.", historical: false,
+            outcome: "You formally object. This isn't what happened \u2014 in reality you were not consulted on the bomb decision through any formal channel, and Washington's small circle of decision-makers moved forward independent of field commanders' input.",
+            reallyHappened: "MacArthur had no formal channel to object through — he was not consulted on the bomb decision and kept preparing Downfall as ordered." },
+          { letter: "B", text: "Keep preparing Operation Downfall as ordered, voicing your doubts only privately, without formally contesting Washington's decision.", historical: true,
+            outcome: "You continue preparing the invasion as ordered. Historically, you held real doubts about whether the bomb was necessary, believing Japan's collapsing military position might have forced surrender through conventional means alone \u2014 but this was never your call to make, and you kept preparing for Downfall regardless." },
+          { letter: "C", text: "Go to the press with your criticism of the bomb decision, to try to force a change in policy.", historical: false,
+            outcome: "You go to the press. This is far outside what happened, and would have been a serious breach of protocol \u2014 in reality, disagreements over the bomb stayed within the small circle of officials actually consulted on the decision.",
+            reallyHappened: "MacArthur kept his doubts private rather than going public — any disagreement stayed within official channels." }
+        ]
+      },
+      {
+        date: "6\u20139 AUGUST 1945",
+        context: "The bombs have been dropped without your direct involvement. Japan still hasn't formally surrendered, and Operation Downfall preparations continue in case an invasion becomes necessary.",
+        question: "Do you scale back invasion preparations now, or continue at full pace?",
+        choices: [
+          { letter: "A", text: "Continue full invasion preparations at pace, since Japan has not yet formally surrendered.", historical: true,
+            outcome: "You continue full preparations. Until Japan's surrender is confirmed, Operation Downfall preparations don't stop \u2014 the invasion remains scheduled and real, right up until mid-August." },
+          { letter: "B", text: "Begin scaling back preparations early, trusting that surrender is now inevitable.", historical: false,
+            outcome: "You begin scaling back early. This isn't what happened \u2014 preparations for Downfall continued at full pace until surrender was actually confirmed; no one was willing to assume it was certain before then.",
+            reallyHappened: "Operation Downfall preparations continued at full pace until Japan's surrender was actually confirmed." }
+        ]
+      },
+      {
+        date: "30 AUGUST \u2013 2 SEPTEMBER 1945",
+        context: "You've been named Supreme Commander for the Allied Powers to formally accept Japan's surrender. Some advisors urge a show of dominance and punishment; others urge restraint.",
+        question: "How do you approach the surrender ceremony and your arrival in Japan?",
+        choices: [
+          { letter: "A", text: "Arrive with overwhelming force and impose immediate, visible punitive measures to make clear who has won.", historical: false,
+            outcome: "You arrive with a show of force. This isn't what happened \u2014 you were known for deliberately projecting calm confidence rather than triumphant vengeance when you landed in Japan, a choice historians see as central to how smoothly the occupation began.",
+            reallyHappened: "MacArthur deliberately arrived without a show of force, projecting calm confidence rather than triumph." },
+          { letter: "B", text: "Arrive deliberately unarmed and calm, projecting confidence and control rather than vengeance, and hold a formal but restrained ceremony aboard USS Missouri.", historical: true,
+            outcome: "You arrive with deliberate restraint \u2014 famously landing without a large visible security presence. On 2 September, you preside over the formal surrender ceremony aboard USS Missouri in Tokyo Bay." }
+        ]
+      },
+      {
+        date: "SEPTEMBER 1945",
+        context: "One of your first major decisions as Supreme Commander: what to do about Emperor Hirohito. Some in Washington and among the Allies want him tried as a war criminal.",
+        question: "Do you push to prosecute Hirohito, or retain him as a symbolic figurehead?",
+        choices: [
+          { letter: "A", text: "Retain Hirohito as a symbolic Emperor, believing his cooperation is essential to a stable, peaceful occupation.", historical: true,
+            outcome: "You choose to retain Hirohito. You argue strongly to Washington that removing him risks chaos and resistance across Japan, while his cooperation could make the occupation far smoother. This becomes one of your most consequential and debated decisions." },
+          { letter: "B", text: "Push for Hirohito to be tried alongside other Japanese leaders as a war criminal.", historical: false,
+            outcome: "You push for prosecution. This isn't what happened \u2014 in reality, you argued forcefully to retain Hirohito, believing the practical benefits of his cooperation outweighed the case for prosecution, and Washington ultimately agreed.",
+            reallyHappened: "MacArthur argued forcefully to retain Hirohito rather than push for his prosecution, and Washington agreed." }
+        ]
+      },
+      {
+        date: "LATE 1945 ONWARD",
+        context: "As you begin governing occupied Japan, you must decide the character of your approach to reconstruction.",
+        question: "What kind of occupation do you lead?",
+        choices: [
+          { letter: "A", text: "A reconstruction-focused occupation \u2014 pushing democratic reforms (a new constitution, land reform, women's suffrage) rather than harsh punitive measures.", historical: true,
+            outcome: "You focus on rebuilding. Your administration pushes through sweeping reforms \u2014 a new constitution, land redistribution, women gaining the right to vote \u2014 earning you the nickname \"the Gentle Conqueror\" among the Japanese public." },
+          { letter: "B", text: "A strictly punitive occupation focused on extracting reparations and limiting Japan's future development.", historical: false,
+            outcome: "You choose a punitive path. This isn't what happened \u2014 in reality, the occupation you led was notably focused on reconstruction and reform rather than punishment, a deliberate choice that shaped how postwar Japan developed.",
+            reallyHappened: "MacArthur's occupation focused on reconstruction and reform, not punishment — this earned him the nickname \u201cthe Gentle Conqueror.\u201d" }
+        ]
+      }
+    ]
+  },
+  japan: {
+    flagLabel: "🇯🇵 JAPANESE LEADERSHIP",
+    headerColor: "text-[#8b0000]",
+    checkpointAfter: 2,
+    checkpointText: "Notice how each of your choices traces back to the same core belief: that the Kokutai \u2014 the Imperial system itself \u2014 had to survive, even if that meant breaking centuries of tradition and intervening personally where Emperors never had before. Your motivation \u2014 preventing Japan's total destruction while preserving what you valued most \u2014 has driven every action so far.",
+    nodes: [
+      {
+        date: "LATE JULY 1945",
+        context: "The Potsdam Declaration has just been issued, threatening \u201cprompt and utter destruction.\u201d Prime Minister Suzuki must respond publicly. Privately, your government remains divided over whether to fight on or seek terms.",
+        question: "How does your government respond to the Potsdam Declaration?",
+        choices: [
+          { letter: "A", text: "Formally and clearly reject the declaration.", historical: false,
+            outcome: "A formal rejection removes any diplomatic ambiguity \u2014 but also removes any room to later argue the declaration was never properly rejected. This is not what happened historically, and it likely hardens the Allied position faster than \u201cmokusatsu\u201d did.",
+            reallyHappened: "Suzuki used the ambiguous word \u201cmokusatsu\u201d rather than formally rejecting the declaration outright." },
+          { letter: "B", text: "Signal privately through diplomatic channels that Japan is open to negotiating.", historical: false,
+            outcome: "Your government did explore back-channel contact with the Soviet Union around this time, hoping for mediation \u2014 but no formal diplomatic signal was sent to the US or Britain. Historians note this hope for Soviet mediation is part of why your government didn't respond more directly to Potsdam.",
+            reallyHappened: "No formal diplomatic signal was sent to the US or Britain — Japan's government responded publicly with \u201cmokusatsu\u201d instead." },
+          { letter: "C", text: "Respond with \u201cmokusatsu\u201d \u2014 a deliberately ambiguous term (roughly \u201cto kill with silence,\u201d or \u201cno comment for now\u201d).", historical: true,
+            outcome: "Suzuki uses the word \u201cmokusatsu\u201d at a press conference \u2014 some later argue he meant \u201cno comment for now\u201d while your government keeps debating internally. The Allies interpret it as a firm rejection. The ambiguity of a single word becomes one of the most consequential translations of the war." }
+        ]
+      },
+      {
+        date: "6 AUGUST 1945",
+        context: "Reports are arriving about a devastating new weapon used against Hiroshima. Military officials are downplaying the scale of destruction in their initial briefings to you, uncertain themselves and reluctant to admit how catastrophic it truly is.",
+        question: "How do you respond to the incomplete, downplayed reports?",
+        choices: [
+          { letter: "A", text: "Accept the military's initial, downplayed assessment without question.", historical: false,
+            outcome: "You accept the incomplete picture given to you. This risks delaying your understanding of the crisis even further than what actually happened \u2014 in reality, even the downplayed initial reports were disturbing enough to trouble your government deeply.",
+            reallyHappened: "Even the incomplete initial reports troubled the government deeply — a fuller picture only emerged over the following days." },
+          { letter: "B", text: "Press for a full, independent investigation into what actually happened at Hiroshima, rather than accepting the military's initial account.", historical: true,
+            outcome: "You push for clearer information. A full understanding of Hiroshima's destruction takes days to reach you and your government fully \u2014 this delay and confusion is part of why the response to the bombing wasn't immediate." },
+          { letter: "C", text: "Publicly address the nation immediately about Hiroshima, before your government has agreed on a response.", historical: false,
+            outcome: "You act immediately and publicly. This isn't what happened \u2014 in reality, no public statement was made until the eventual surrender broadcast over a week later, after your government worked through the crisis internally first.",
+            reallyHappened: "No public statement was made until the surrender broadcast over a week later — the government worked through the crisis internally first." }
+        ]
+      },
+      {
+        date: "8\u20139 AUGUST 1945",
+        context: "The Soviet Union invades Manchuria, ending any hope of Soviet-mediated peace. Then Nagasaki is destroyed by a second bomb. Your \u201cBig Six\u201d war council is deadlocked 3\u20133 on whether to accept Potsdam or fight on.",
+        question: "What do you do about the deadlock?",
+        choices: [
+          { letter: "A", text: "Break precedent and personally intervene at a midnight meeting, choosing to accept the Potsdam terms provided the Imperial institution is preserved.", historical: true,
+            outcome: "You attend a midnight meeting of the Supreme Council on 9\u201310 August and, breaking a tradition roughly 70 years old, state your decision directly: Japan will accept the Potsdam Declaration, on condition the Kokutai is preserved. Prime Minister Suzuki had specifically asked you to decide because the council could not resolve it themselves." },
+          { letter: "B", text: "Stay silent and let the council keep debating, as tradition dictates for the Emperor.", historical: false,
+            outcome: "You stay silent, as an Emperor traditionally would. The 3\u20133 deadlock continues unresolved \u2014 in reality, this exact deadlock is what made your direct intervention necessary. Without it, the war likely continues, at growing cost to Japan.",
+            reallyHappened: "Hirohito broke a roughly 70-year tradition of Imperial silence to personally intervene and break the 3\u20133 deadlock." },
+          { letter: "C", text: "Side publicly and immediately with the military hardliners who want to continue fighting.", historical: false,
+            outcome: "Siding with the hardliners is not what happened, and would be a dramatic reversal of your actual historical position \u2014 in reality, you were the one who broke the deadlock in favour of ending the war, not continuing it.",
+            reallyHappened: "Hirohito sided with ending the war, not continuing it — the opposite of siding with the hardliners." }
+        ]
+      },
+      {
+        date: "11\u201312 AUGUST 1945",
+        context: "The Byrnes Note has arrived from the United States. It says your authority will be \u201csubject to\u201d the Allied Supreme Commander \u2014 it neither explicitly guarantees nor explicitly ends the Imperial institution. Hardliners call this an insult that must be rejected; the peace faction argues it's enough to work with.",
+        question: "How do you respond to the ambiguous wording?",
+        choices: [
+          { letter: "A", text: "Demand the US rewrite the note with an explicit guarantee of the Imperial institution before proceeding.", historical: false,
+            outcome: "You demand clarity. This isn't what happened \u2014 in reality there was no time for a diplomatic back-and-forth; the ambiguity was accepted as workable rather than contested, given how urgent the situation had become.",
+            reallyHappened: "There was no time for a diplomatic back-and-forth — the ambiguous wording was accepted as workable." },
+          { letter: "B", text: "Accept it as sufficient grounds to proceed with surrender, choosing to interpret the ambiguity in Japan's favour.", historical: true,
+            outcome: "You side with the peace faction, accepting the Byrnes Note's wording as workable rather than demanding it be rewritten \u2014 keeping the surrender process moving in the narrow window before hardliners could organise further resistance." },
+          { letter: "C", text: "Reject the note and side with hardliners who want to continue fighting rather than accept an ambiguous status.", historical: false,
+            outcome: "You side with the hardliners. This is the opposite of your actual historical choice \u2014 in reality you consistently sided with ending the war throughout this period, even amid deep uncertainty about your own future status.",
+            reallyHappened: "Hirohito consistently sided with ending the war throughout this period, despite the deep uncertainty." }
+        ]
+      },
+      {
+        date: "14\u201315 AUGUST 1945",
+        context: "Some military officers, led by hardliners, are still resisting surrender; there is even an attempted coup (the Ky\u016bj\u014d incident) to try to stop your broadcast from ever being heard.",
+        question: "How do you proceed?",
+        choices: [
+          { letter: "A", text: "Proceed with recording your surrender announcement, and insist it be broadcast despite the risk of a coup.", historical: true,
+            outcome: "You proceed. Rebel officers briefly attempt to seize the recording and prevent the broadcast, but loyal forces put down the attempt. On 15 August, your recorded address \u2014 the Gyokuon-h\u014dso \u2014 is broadcast to the Japanese people. It is the first time most of them have ever heard your voice." },
+          { letter: "B", text: "Delay the broadcast until the military situation within Japan is fully secure.", historical: false,
+            outcome: "Delaying risks giving the coup plotters more time to organise, and prolongs the uncertainty for a population that has already suffered tremendously. This is not what happened historically \u2014 the broadcast went ahead despite the immediate danger.",
+            reallyHappened: "The broadcast went ahead on 15 August despite the attempted coup — it was not delayed." }
+        ]
+      }
+    ]
+  }
+};
+
+const REFLECTIONS = {
+  truman: [
+    "At each decision, what did you value most \u2014 speed, certainty, leverage, or something else? How did that shape your choice?",
+    "Where did the wider political environment (the looming Cold War, the Soviet invasion) push you toward one option over another?",
+    "The decision about HOW to use the bomb (demonstration vs. direct strike) reveals something different about your priorities than the decision to build or use it at all. What does it reveal?",
+    "If you played MacArthur, compare how much control each of you actually had over the bomb decision itself. If you played Hirohito, look for the moment your fears and his were about the very same event \u2014 but pointed you in opposite directions."
+  ],
+  macarthur: [
+    "You doubted the bomb was necessary, but had no formal power to stop it. How does having values without the power to act on them compare to Truman's position?",
+    "What does your choice about how to arrive in Japan (calm restraint vs. a show of force) reveal about what you believed the occupation actually needed to succeed?",
+    "Retaining Hirohito was arguably your single most consequential decision \u2014 made largely on your own judgement. What does that reveal about the kind of power you held, versus Truman's?",
+    "If you played Truman, compare the decisions each of you were actually able to make. If you played Hirohito, notice that your decision to retain him and his decision to survive the war both depended on each other."
+  ],
+  japan: [
+    "At each decision, what did you fear losing most \u2014 the Kokutai, Japan itself, or something else? How did that shape your choice?",
+    "Where did tradition (Meiji-era precedent) make a decision harder than it would have been for Truman?",
+    "The decision about how to handle incomplete reports from Hiroshima reveals something about trust within your own government. What does it reveal?",
+    "If you played Truman or MacArthur, look for the moment your fears and theirs were about the very same event \u2014 but pointed each of you in opposite directions."
+  ]
+};
+
+// ============================================================
+// STATE
+// ============================================================
+let state = { role: null, nodeIndex: 0, matches: 0, total: 0, checkpointShown: false, currentChoices: [] };
+let completedRuns = {}; // { truman: {matches,total,choices:[{date,text,historical}]}, macarthur: {...}, japan: {...} }
+const ROLE_GROUPS = { us: ['truman', 'macarthur'], japan: ['japan'] };
+const ROLE_ORDER = ['truman', 'macarthur', 'japan'];
+
+function $(id) { return document.getElementById(id); }
+function showScreen(id) {
+  stopSpeaking();
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  $(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ---- Text-to-speech (read information aloud; never used on the choice options) ----
+function stopSpeaking() {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+  document.querySelectorAll('.speaker-btn.speaking').forEach(b => b.classList.remove('speaking'));
+}
+
+function speakElement(btn) {
+  if (!('speechSynthesis' in window)) {
+    btn.disabled = true;
+    btn.title = 'Text-to-speech is not supported in this browser';
+    return;
+  }
+  const wasSpeaking = btn.classList.contains('speaking');
+  stopSpeaking();
+  if (wasSpeaking) return; // clicking an already-speaking button just stops it
+
+  const targetId = btn.getAttribute('data-speak');
+  const text = ($(targetId) || {}).textContent || '';
+  if (!text.trim()) return;
+
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.rate = 0.95;
+  btn.classList.add('speaking');
+  utter.onend = () => btn.classList.remove('speaking');
+  utter.onerror = () => btn.classList.remove('speaking');
+  window.speechSynthesis.speak(utter);
+}
+function renderProgress(containerId, current, total) {
+  const el = $(containerId);
+  if (!el) return;
+  el.innerHTML = '';
+  for (let i = 0; i < total; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'progress-dot' + (i < current ? ' done' : '');
+    el.appendChild(dot);
+  }
+}
+
+function startGame(role) {
+  state.role = role;
+  state.nodeIndex = 0;
+  state.matches = 0;
+  state.total = PATHS[role].nodes.length;
+  state.checkpointShown = false;
+  state.currentChoices = [];
+  renderPerspective();
+  showScreen('screen-perspective');
+}
+
+function renderPerspective() {
+  const p = PERSPECTIVES[state.role];
+  $('persp-card').className = 'bg-white rounded-xl shadow-sm border-t-4 overflow-hidden mb-6 ' + p.accent;
+  $('persp-header').innerHTML = `
+    <img src="${p.img}" alt="${p.imgAlt}" class="archival-photo w-24 h-24 rounded-full object-cover mx-auto mb-4 border-2 border-slate-200 shadow-md">
+    <div class="mono text-[11px] uppercase tracking-widest ${p.headerColor} font-bold mb-1">${p.flagLabel}</div>
+    <h2 class="text-2xl font-black text-slate-900">Who You Are: ${p.name}</h2>
+  `;
+  $('persp-body').innerHTML = p.items.map(([label, text], i) => `
+    <details class="group bg-slate-50 rounded-lg border border-slate-100 overflow-hidden"${i === 0 ? ' open' : ''}>
+      <summary class="cursor-pointer p-4 flex justify-between items-center gap-3 select-none">
+        <span class="mono text-[10px] uppercase tracking-widest text-slate-600 font-bold flex-1">${label}</span>
+        <button class="speaker-btn" data-speak="persp-item-${i}" onclick="event.preventDefault(); event.stopPropagation(); speakElement(this);" aria-label="Read this section aloud" title="Read aloud"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H2v6h4l5 4V5z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15.5 8.5a5 5 0 010 7M18 6a9 9 0 010 12"/></svg></button>
+        <span class="text-slate-600 transition-transform group-open:rotate-180 shrink-0">▾</span>
+      </summary>
+      <p class="text-slate-800 text-sm leading-relaxed px-4 pb-4" id="persp-item-${i}">${text}</p>
+    </details>
+  `).join('');
+}
+
+function beginDecisions() {
+  renderDecision();
+  showScreen('screen-decision');
+}
+
+let decisionStage = 1;
+
+function renderDecision() {
+  const path = PATHS[state.role];
+  const node = path.nodes[state.nodeIndex];
+
+  $('decision-headerline').innerHTML = `<span class="${path.headerColor}">${node.date}</span><span class="text-slate-600">${path.flagLabel}</span>`;
+  $('decision-context').textContent = node.context;
+  $('decision-question').textContent = node.question;
+
+  const choicesEl = $('decision-choices');
+  choicesEl.innerHTML = '';
+  node.choices.forEach((choice, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn w-full bg-white rounded-xl border-2 border-slate-200 p-4 shadow-sm flex gap-3 items-start';
+    btn.setAttribute('aria-label', 'Option ' + choice.letter + ': ' + choice.text);
+    btn.innerHTML = `<span class="mono font-bold text-whs-goldtext shrink-0">${choice.letter}</span><span class="text-slate-800 text-sm leading-relaxed">${choice.text}</span>`;
+    btn.onclick = () => selectChoice(idx);
+    choicesEl.appendChild(btn);
+  });
+
+  decisionStage = 1;
+  updateDecisionStageUI();
+  renderProgress('progress-track', state.nodeIndex, state.total);
+}
+
+function updateDecisionStageUI() {
+  const stage2 = $('decision-stage2');
+  const choicesEl = $('decision-choices');
+  const revealWrap = $('decision-reveal-wrap');
+  const revealBtn = $('decision-reveal-btn');
+  const backBtn = $('decision-back-btn');
+
+  if (decisionStage === 1) {
+    stage2.classList.add('hidden');
+    choicesEl.classList.add('hidden');
+    revealWrap.classList.remove('hidden');
+    revealBtn.textContent = 'Continue →';
+    backBtn.classList.add('hidden');
+  } else if (decisionStage === 2) {
+    stage2.classList.remove('hidden');
+    choicesEl.classList.add('hidden');
+    revealWrap.classList.remove('hidden');
+    revealBtn.textContent = 'See My Options →';
+    backBtn.classList.remove('hidden');
+  } else {
+    stage2.classList.remove('hidden');
+    choicesEl.classList.remove('hidden');
+    revealWrap.classList.add('hidden');
+    backBtn.classList.add('hidden');
+  }
+}
+
+function advanceDecisionStage() {
+  decisionStage++;
+  updateDecisionStageUI();
+}
+
+function reverseDecisionStage() {
+  decisionStage = Math.max(1, decisionStage - 1);
+  updateDecisionStageUI();
+}
+
+function selectChoice(idx) {
+  const path = PATHS[state.role];
+  const node = path.nodes[state.nodeIndex];
+  const choice = node.choices[idx];
+
+  if (choice.historical) state.matches++;
+  state.currentChoices.push({ date: node.date, text: choice.text, historical: choice.historical });
+
+  const tagEl = $('outcome-tag');
+  if (choice.historical) {
+    tagEl.textContent = 'WHAT ACTUALLY HAPPENED';
+    tagEl.className = 'mono inline-block text-[10px] uppercase tracking-widest px-3 py-1 rounded-full mb-4 bg-emerald-100 text-emerald-800';
+  } else {
+    tagEl.textContent = 'HYPOTHETICAL — EDUCATED SPECULATION';
+    tagEl.className = 'mono inline-block text-[10px] uppercase tracking-widest px-3 py-1 rounded-full mb-4 bg-amber-100 text-amber-900';
+  }
+  $('outcome-text').textContent = choice.outcome;
+
+  const rhBox = $('really-happened-box');
+  if (choice.historical) {
+    rhBox.classList.add('hidden');
+  } else {
+    $('really-happened-text').textContent = choice.reallyHappened;
+    rhBox.classList.remove('hidden');
+  }
+
+  const isLast = state.nodeIndex >= path.nodes.length - 1;
+  $('continue-btn').textContent = isLast ? 'See What Happened →' : 'Continue →';
+
+  renderProgress('progress-track-outcome', state.nodeIndex + 1, state.total);
+  showScreen('screen-outcome');
+}
+
+function backToChangeAnswer() {
+  const undone = state.currentChoices.pop();
+  if (undone && undone.historical) state.matches--;
+  decisionStage = 3;
+  updateDecisionStageUI();
+  showScreen('screen-decision');
+}
+
+function continueAfterOutcome() {
+  const path = PATHS[state.role];
+  const isLast = state.nodeIndex >= path.nodes.length - 1;
+  const shouldCheckpoint = !state.checkpointShown && state.nodeIndex === path.checkpointAfter;
+
+  if (shouldCheckpoint) {
+    state.checkpointShown = true;
+    $('checkpoint-text').textContent = path.checkpointText;
+    showScreen('screen-checkpoint');
+    return;
+  }
+
+  if (isLast) {
+    renderEpilogue();
+    showScreen('screen-epilogue');
+  } else {
+    state.nodeIndex++;
+    renderDecision();
+    showScreen('screen-decision');
+  }
+}
+
+function continueAfterCheckpoint() {
+  const path = PATHS[state.role];
+  const isLast = state.nodeIndex >= path.nodes.length - 1;
+  if (isLast) {
+    renderEpilogue();
+    showScreen('screen-epilogue');
+  } else {
+    state.nodeIndex++;
+    renderDecision();
+    showScreen('screen-decision');
+  }
+}
+
+function renderEpilogue() {
+  // Save this completed run for the eventual full summary
+  completedRuns[state.role] = { matches: state.matches, total: state.total, choices: state.currentChoices.slice() };
+
+  $('match-summary').textContent =
+    'YOUR CHOICES MATCHED THE HISTORICAL RECORD ' + state.matches + ' OF ' + state.total + ' TIMES. ' +
+    'THIS ISN\u2019T A SCORE \u2014 THESE WERE NOT RIGHT-OR-WRONG ANSWERS, ONLY THE ACTUAL PATH HISTORY TOOK VERSUS OTHER PLAUSIBLE ONES.';
+
+  const thisName = PERSPECTIVES[state.role].name;
+  const notYetPlayed = ROLE_ORDER.filter(r => r !== state.role && !completedRuns[r]);
+  const suggestions = notYetPlayed.length > 0 ? notYetPlayed : ROLE_ORDER.filter(r => r !== state.role);
+
+  if (notYetPlayed.length > 0) {
+    $('epilogue-crossover').textContent =
+      'You\u2019ve just walked through the decisions facing ' + thisName +
+      '. The same weeks looked completely different from the other side' + (notYetPlayed.length > 1 ? 's' : '') +
+      '. Try playing as ' + suggestions.map(r => PERSPECTIVES[r].name).join(' or ') +
+      ' next \u2014 then compare what each of you valued, feared, and did.';
+  } else {
+    $('epilogue-crossover').textContent =
+      'You\u2019ve now played all three perspectives. Compare what each of them valued, feared, and did \u2014 and check the full summary below to see it all side by side.';
+  }
+
+  const list = $('reflection-list');
+  list.innerHTML = '';
+  REFLECTIONS[state.role].forEach(q => {
+    const li = document.createElement('li');
+    li.className = 'flex gap-2 text-sm text-slate-800 leading-relaxed';
+    li.innerHTML = '<span class="text-whs-gold font-bold shrink-0">\u00b7</span><span>' + q + '</span>';
+    list.appendChild(li);
+  });
+
+  // Build action buttons: one per suggested role to try next, plus Start Over, plus
+  // a prominent Full Summary button once all three perspectives have been played.
+  const actions = $('epilogue-actions');
+  actions.innerHTML = '';
+  suggestions.slice(0, 2).forEach(r => {
+    const btn = document.createElement('button');
+    btn.className = 'mono text-sm font-bold px-6 py-3 rounded-lg bg-whs-gold text-white shadow-md hover:brightness-110 transition';
+    btn.textContent = 'Play as ' + PERSPECTIVES[r].name.replace(/^(President|Emperor|General)\s/, '');
+    btn.onclick = () => startGame(r);
+    actions.appendChild(btn);
+  });
+  const startOverBtn = document.createElement('button');
+  startOverBtn.className = 'mono text-sm font-bold px-6 py-3 rounded-lg bg-slate-200 text-slate-700 hover:bg-slate-300 transition';
+  startOverBtn.textContent = 'Back to Start';
+  startOverBtn.onclick = () => { showScreen('screen-intro'); };
+  actions.appendChild(startOverBtn);
+
+  const allDone = ROLE_ORDER.every(r => completedRuns[r]);
+  if (allDone) {
+    const summaryBtn = document.createElement('button');
+    summaryBtn.className = 'mono text-sm font-bold px-6 py-3 rounded-lg bg-whs-dark text-white shadow-md hover:brightness-110 transition';
+    summaryBtn.textContent = 'View Full Summary →';
+    summaryBtn.onclick = () => { renderFullSummary(); showScreen('screen-summary'); };
+    actions.appendChild(summaryBtn);
+  }
+
+  renderProgress('progress-track', state.total, state.total);
+}
+
+function restart() {
+  state = { role: null, nodeIndex: 0, matches: 0, total: 0, checkpointShown: false, currentChoices: [] };
+  showScreen('screen-intro');
+}
+
+function resetEverything() {
+  completedRuns = {};
+  restart();
+}
+
+// ---- Full cross-perspective summary ----
+function summaryBullets(role) {
+  // Always the real historical record for this person, regardless of what the
+  // student actually chose while playing \u2014 the summary is a trustworthy recap,
+  // not a replay of their exploration (which may have included hypotheticals).
+  if (!completedRuns[role]) return [];
+  return PATHS[role].nodes.map(node => {
+    const hist = node.choices.find(c => c.historical);
+    return `<strong>${node.date}:</strong> ${hist.outcome}`;
+  });
+}
+
+function renderFullSummary() {
+  const usBullets = [];
+  ['truman', 'macarthur'].forEach(role => {
+    if (!completedRuns[role]) return;
+    const personLabel = PERSPECTIVES[role].name.replace(/^(President|General)\s/, '');
+    summaryBullets(role).forEach(b => usBullets.push(`<strong class="text-whs-dark">${personLabel}</strong> \u2014 ${b}`));
+  });
+  const japanBullets = summaryBullets('japan');
+
+  $('summary-us-list').innerHTML = usBullets.map(b => `<li class="flex gap-2 text-sm text-slate-800 leading-relaxed"><span class="text-whs-gold font-bold shrink-0">\u00b7</span><span>${b}</span></li>`).join('');
+  $('summary-japan-list').innerHTML = japanBullets.map(b => `<li class="flex gap-2 text-sm text-slate-800 leading-relaxed"><span class="text-whs-gold font-bold shrink-0">\u00b7</span><span>${b}</span></li>`).join('');
+}
+
+function printSummary() {
+  window.print();
+}
+</script>
+</body>
+</html>
